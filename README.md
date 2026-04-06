@@ -1,11 +1,11 @@
 # Library-Management-System
 This is sem project built in c++
 
-----Tools Used---------
+# ----Tools Used---------
 1: Github (For collaborative coding)
 2: VS Code (For coding)
 
--------Features--------
+# -------Features--------
 1: Add new books
 2: Allot books
 3: Available books
