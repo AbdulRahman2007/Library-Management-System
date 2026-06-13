@@ -63,7 +63,7 @@ private:
 public:
     bool authenticate() {
         string enteredUser;
-        int    enteredPass;
+        int enteredPass;
 
         cout << "\n===== LIBRARY LOGIN =====" << endl;
         cout << "Username : ";

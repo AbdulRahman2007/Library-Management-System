@@ -6,3 +6,203 @@ jk rowling
 deep work
 unknown
 1
+3
+to kill a mockingbird
+harper lee
+0
+4
+1984
+george orwell
+0
+5
+pride and prejudice
+jane austen
+0
+6
+the great gatsby
+f. scott fitzgerald
+0
+7
+moby dick
+herman melville
+0
+8
+war and peace
+leo tolstoy
+0
+9
+the catcher in the rye
+j.d. salinger
+0
+10
+the hobbit
+j.r.r. tolkien
+0
+11
+fahrenheit 451
+ray bradbury
+0
+12
+jane eyre
+charlotte brontë
+0
+13
+crime and punishment
+fyodor dostoevsky
+0
+14
+the odyssey
+homer
+0
+15
+the alchemist
+paulo coelho
+0
+16
+the kite runner
+khaled hosseini
+0
+17
+the da vinci code
+dan brown
+0
+18
+life of pi
+yann martel
+0
+19
+sapiens
+yuval noah harari
+0
+20
+the silent patient
+alex michaelides
+0
+21
+becoming
+michelle obama
+0
+22
+the girl on the train
+paula hawkins
+0
+23
+gone girl
+gillian flynn
+0
+24
+the fault in our stars
+john green
+0
+25
+the road
+cormac mccarthy
+0
+26
+the book thief
+markus zusak
+0
+27
+the hunger games
+suzanne collins
+0
+28
+catch-22
+joseph heller
+0
+29
+the handmaid's tale
+margaret atwood
+0
+30
+the immortal life of henrietta lacks
+rebecca skloot
+0
+31
+a brief history of time
+stephen hawking
+0
+32
+think and grow rich
+napoleon hill
+0
+33
+the power of habit
+charles duhigg
+0
+34
+the 7 habits of highly effective people
+stephen r. covey
+0
+35
+rich dad poor dad
+robert t. kiyosaki
+0
+36
+the light between oceans
+m.l. stedman
+0
+37
+the girl with the dragon tattoo
+stieg larsson
+0
+38
+memoirs of a geisha
+arthur golden
+0
+39
+the shack
+william p. young
+0
+40
+the help
+kathryn stockett
+0
+41
+the secret
+rhonda byrne
+0
+42
+angels and demons
+dan brown
+0
+43
+the maze runner
+james dashner
+0
+44
+the perks of being a wallflower
+stephen chbosky
+0
+45
+the stand
+stephen king
+0
+46
+dune
+frank herbert
+0
+47
+the lion, the witch and the wardrobe
+c.s. lewis
+0
+48
+the picture of dorian gray
+oscar wilde
+0
+49
+the corrections
+jonathan franzen
+0
+50
+the namesake
+jhumpa lahiri
+0
+51
+ender's game
+orson scott card
+0
+52
+the girl in the spider's web
+david lagercrantz
+0
