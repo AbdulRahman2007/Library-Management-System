@@ -3,6 +3,11 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <sstream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
+#include <algorithm>
 
 using namespace std;
 
@@ -95,6 +100,54 @@ private:
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
+    // Parse a date in YYYY-MM-DD format into year/month/day. Returns true if parsed and reasonable.
+    bool parseYYYYMMDD(const string &date, int &year, int &month, int &day) const {
+        if (date.size() != 10) return false;
+        if (date[4] != '-' || date[7] != '-') return false;
+        try {
+            year  = stoi(date.substr(0, 4));
+            month = stoi(date.substr(5, 2));
+            day   = stoi(date.substr(8, 2));
+        } catch (...) {
+            return false;
+        }
+        if (month < 1 || month > 12) return false;
+        if (day < 1 || day > 31) return false;
+        return true;
+    }
+
+    // Returns number of overdue days (0 if not overdue or if date invalid).
+    int daysOverdueSimple(const string &dueDate) const {
+        int y, m, d;
+        if (!parseYYYYMMDD(dueDate, y, m, d)) return 0;
+
+        tm tm_due = {};
+        tm_due.tm_year = y - 1900;
+        tm_due.tm_mon  = m - 1;
+        tm_due.tm_mday = d;
+        tm_due.tm_hour = 0;
+        tm_due.tm_min  = 0;
+        tm_due.tm_sec  = 0;
+
+        time_t due_time = mktime(&tm_due);
+        if (due_time == -1) return 0;
+
+        time_t now_time = time(nullptr);
+        double diff_seconds = difftime(now_time, due_time);
+        int diff_days = static_cast<int>(diff_seconds / (60 * 60 * 24));
+        return diff_days > 0 ? diff_days : 0;
+    }
+
+    // Compute fine amount for a given due date and per-day rate. Also returns overdue days via reference.
+    double computeFine(const string &dueDate, double finePerDay, int &overdueDays) const {
+        overdueDays = daysOverdueSimple(dueDate);
+        return overdueDays * finePerDay;
+    }
+
+    bool isBookIdUnique(const string &bookId) const {
+        return find_if(books.begin(), books.end(), [&](const Book &b){ return b.id == bookId; }) == books.end();
+    }
+
     int findBookIndex(const string &bookId) const {
         for (size_t i = 0; i < books.size(); i++) {
             if (books[i].id == bookId) return static_cast<int>(i);
@@ -126,6 +179,14 @@ public:
             cout << "\n-- Book " << i + 1 << " --" << endl;
             cout << "  Enter Book ID   : ";
             getline(cin, bid);
+            if (bid.empty()) {
+                cout << "  Invalid ID. Skipping this book." << endl;
+                continue;
+            }
+            if (!isBookIdUnique(bid)) {
+                cout << "  Book ID already exists. Skipping." << endl;
+                continue;
+            }
             cout << "  Enter Book Name : ";
             getline(cin, bname);
             cout << "  Enter Author    : ";
@@ -213,15 +274,25 @@ public:
         string returnDate;
         cout << "Enter Student Name : ";
         getline(cin, studentName);
-        cout << "Enter Return Date  : ";
+        if (studentName.empty()) {
+            cout << "Student name cannot be empty. Aborting allotment." << endl;
+            return;
+        }
+
+        cout << "Enter Return Date (YYYY-MM-DD)  : ";
         getline(cin, returnDate);
+        int yy, mm, dd;
+        if (!parseYYYYMMDD(returnDate, yy, mm, dd)) {
+            cout << "Invalid date format. Use YYYY-MM-DD. Aborting allotment." << endl;
+            return;
+        }
 
         books[index].isAvailable = false;
         allotments.emplace_back(studentName, searchId, returnDate);
 
         saveBooksToFile();
         saveAllotmentsToFile();
-        cout << "Book allotted successfully to " << studentName << "!" << endl;
+        cout << "Book allotted successfully to " << studentName << "! Return by " << returnDate << endl;
     } // allotBook: assign a book to a student and create an allotment record
 
     void returnBook() {
@@ -241,15 +312,38 @@ public:
             return;
         }
 
-        books[index].isAvailable = true;
         int allotIndex = findAllotmentIndexByBookId(searchId);
-        if (allotIndex >= 0) {
-            allotments.erase(allotments.begin() + allotIndex);
+        if (allotIndex < 0) {
+            cout << "No allotment record found for this book. Marking as available." << endl;
+            books[index].isAvailable = true;
+            saveBooksToFile();
+            return;
         }
+
+        // Check overdue and compute fine in a clear, simple way
+        string dueDate = allotments[allotIndex].returnDate;
+        const double finePerDay = 1.5; // currency units per day
+        int overdueDays = 0;
+        int py, pm, pd;
+        if (!parseYYYYMMDD(dueDate, py, pm, pd)) {
+            cout << "Warning: stored return date is invalid (" << dueDate << "). No fine computed." << endl;
+        } else {
+            overdueDays = daysOverdueSimple(dueDate);
+        }
+
+        double fine = overdueDays * finePerDay;
+
+        books[index].isAvailable = true;
+        allotments.erase(allotments.begin() + allotIndex);
 
         saveBooksToFile();
         saveAllotmentsToFile();
-        cout << "Book returned successfully." << endl;
+
+        if (overdueDays > 0) {
+            cout << "Book returned. Overdue by " << overdueDays << " days. Fine: " << fixed << setprecision(2) << fine << " units." << endl;
+        } else {
+            cout << "Book returned successfully. No fine." << endl;
+        }
     } // returnBook: marks a book available again and removes its allotment record
 
     void displayAllotments() const {
